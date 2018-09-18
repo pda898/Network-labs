@@ -47,19 +47,20 @@ public class App
         DatagramPacket recvPacket = new DatagramPacket(buf, buf.length);
         Reader reader = new InputStreamReader(System.in);
         System.out.println("Starting search for program copies");
+        timeoutReached = true;
         while (!reader.ready()) {
-            timeoutReached = false;
-            DatagramPacket pingPacket = new DatagramPacket(pingMessage.getBytes(), pingMessage.length(), group, port);
-            socket.send(pingPacket);
-            while (!timeoutReached) {
-                try {
-                    socket.receive(recvPacket);
-                } catch (SocketTimeoutException e) {
-                    timeoutReached = true;
-               }
-               if (!timeoutReached) {
-                   parseRecvPacket(recvPacket);
-               }
+            if (timeoutReached) {
+                DatagramPacket pingPacket = new DatagramPacket(pingMessage.getBytes(), pingMessage.length(), group, port);
+                socket.send(pingPacket);
+                timeoutReached = false;
+            }
+            try {
+                socket.receive(recvPacket);
+            } catch (SocketTimeoutException e) {
+                timeoutReached = true;
+            }
+            if (!timeoutReached) {
+                parseRecvPacket(recvPacket);
             }
         }
         reader.read(); //To extract exit command from buffer and avoid dumping it into shell or another text field
@@ -73,7 +74,6 @@ public class App
         MulticastSocket socket = new MulticastSocket(port);
         socket.setSoTimeout(timeout*1000);
         socket.setLoopbackMode(true); //So we will not recieve our own messages
-        System.out.println(socket.getInterface().getHostAddress());
         socket.joinGroup(group);
         return socket;
     }
