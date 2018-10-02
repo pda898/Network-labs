@@ -101,7 +101,7 @@ public class ConnectionTask implements Runnable {
         if (now - lastTime > timeout) {
             throw new TimeoutException();
         }
-        System.out.println(filename+": "+((lastSize-currSize)*1.0/(now-lastTime))+" bytes/sec (Total: "+((maxSize-currSize)*1.0/(now-startTime))+")");
+        System.out.println(filename+": "+((lastSize-currSize)*1000.0/(now-lastTime))+" bytes/sec (Total: "+((maxSize-currSize)*1000.0/(now-startTime))+")");
         lastSize = currSize;
         return now;
     }
