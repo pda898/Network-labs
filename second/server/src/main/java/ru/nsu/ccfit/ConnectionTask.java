@@ -52,6 +52,9 @@ public class ConnectionTask implements Runnable {
             while (size > 0) {
                 try {
                     int read = in.read(buffer);
+                    if (read == -1) {
+                        throw new IOException("Connection closed");
+                    }
                     file.write(buffer, 0, read);
                     size -= read;
                     if (System.currentTimeMillis() - lastTime > tickTime) {
@@ -63,10 +66,16 @@ public class ConnectionTask implements Runnable {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Cannot create file "+filename+" for client");
+            cleanup(filename);
         } catch (TimeoutException e) {
             System.out.println("File download "+filename+" was stopped (reason: timeout)");
+            cleanup(filename);
+        } catch (EOFException e) {
+            System.out.println("Connection was reset by peer for file "+filename);
+            cleanup(filename);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("I/O error: "+e.getLocalizedMessage());
+            cleanup(filename);
         } finally {
             if (file != null) {
                 try {
@@ -84,10 +93,15 @@ public class ConnectionTask implements Runnable {
         }
     }
 
-    static private String parse(String in) {
+    static private String parse(String in) throws FileNotFoundException {
         int pos = Integer.max(in.lastIndexOf("/"),in.lastIndexOf("\\"));
         pos = Integer.max(pos,0);
-        return in.substring(pos).trim();//trim because some random shit
+        String result = in.substring(pos).trim();//trim because zero bytes
+        File file = new File("uploads"+File.separator+result);
+        if (file.exists()) {
+            throw new FileNotFoundException();
+        }
+        return result;
     }
 
     private void initTimer(long size, long time) {
@@ -104,5 +118,12 @@ public class ConnectionTask implements Runnable {
         System.out.println(filename+": "+((lastSize-currSize)*1000.0/(now-lastTime))+" bytes/sec (Total: "+((maxSize-currSize)*1000.0/(now-startTime))+")");
         lastSize = currSize;
         return now;
+    }
+
+    private void cleanup(String filename) {
+        if (!filename.equals("")) {
+            File file = new File("uploads" + File.separator + filename);
+            file.delete();
+        }
     }
 }
