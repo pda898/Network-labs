@@ -39,6 +39,7 @@ public class ConnectionTask implements Runnable {
     @Override
     public void run() {
         FileOutputStream file = null;
+        Boolean requestCleanup = false;
         byte[] buffer = new byte[bufferSize];
         byte[] name = new byte[nameLength];
         try {
@@ -65,17 +66,17 @@ public class ConnectionTask implements Runnable {
                 }
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Cannot create file "+filename+" for client");
-            cleanup(filename);
+            System.out.println("Cannot create file "+e.getMessage()+" for client");
+            requestCleanup = true;
         } catch (TimeoutException e) {
             System.out.println("File download "+filename+" was stopped (reason: timeout)");
-            cleanup(filename);
+            requestCleanup = true;
         } catch (EOFException e) {
             System.out.println("Connection was reset by peer for file "+filename);
-            cleanup(filename);
+            requestCleanup = true;
         } catch (IOException e) {
             System.out.println("I/O error: "+e.getLocalizedMessage());
-            cleanup(filename);
+            requestCleanup = true;
         } finally {
             if (file != null) {
                 try {
@@ -83,6 +84,11 @@ public class ConnectionTask implements Runnable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            if (requestCleanup) {
+                cleanup(filename);
+            } else {
+                System.out.println(filename+": transmission completed");
             }
             try {
                 out.println("Success");
@@ -99,7 +105,7 @@ public class ConnectionTask implements Runnable {
         String result = in.substring(pos).trim();//trim because zero bytes
         File file = new File("uploads"+File.separator+result);
         if (file.exists()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException(result);
         }
         return result;
     }
@@ -115,7 +121,7 @@ public class ConnectionTask implements Runnable {
         if (now - lastTime > timeout) {
             throw new TimeoutException();
         }
-        System.out.println(filename+": "+((lastSize-currSize)*1000.0/(now-lastTime))+" bytes/sec (Total: "+((maxSize-currSize)*1000.0/(now-startTime))+")");
+        System.out.format("%s: %10.3f bytes/sec (Total: %10.3f)\n",filename,((lastSize-currSize)*1000.0/(now-lastTime)),((maxSize-currSize)*1000.0/(now-startTime)));
         lastSize = currSize;
         return now;
     }

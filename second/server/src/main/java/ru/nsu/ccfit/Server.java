@@ -23,7 +23,7 @@ public class Server
     public Server(int port) throws IOException {
         socket = new ServerSocket(port);
         socket.setSoTimeout(timeout);
-        threads = new ThreadPoolExecutor(1, numThreads, 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(numThreads));
+        threads = new ThreadPoolExecutor(numThreads, numThreads, 1000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(numThreads));
         File dir = new File("uploads");
         dir.mkdir();
     }
@@ -52,6 +52,7 @@ public class Server
         while (!reader.ready()) {
             try {
                 newSocket = socket.accept();
+                System.out.println("New connect");
                 threads.execute(new ConnectionTask(newSocket));
             } catch (SocketTimeoutException e) {
                 //should be empty because 0 reaction requires in that case
