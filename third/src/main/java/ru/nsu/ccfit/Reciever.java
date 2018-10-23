@@ -49,7 +49,7 @@ public class Reciever extends Thread {
                         if (ThreadLocalRandom.current().nextInt(0, 100 + 1) > failPercent) {
                             if (node.expectedID() == Integer.parseInt(text.substring(0, text.indexOf(":")))) {
                                 System.out.println(node.getNodeName() + ": " + text.substring(text.indexOf(":") + 1));
-                                messageQueue.put(new Message(packet.getAddress(), packet.getPort(), text, Message.TYPE_MESSAGE));
+                                messageQueue.put(new Message(packet.getAddress(), packet.getPort(), text.substring(text.indexOf(":") + 1), Message.TYPE_MESSAGE));
                                 text = String.valueOf(Message.TYPE_CONFIRM);
                                 buf = text.getBytes();
                                 packet = new DatagramPacket(buf, buf.length, packet.getAddress(), packet.getPort());

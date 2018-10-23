@@ -67,7 +67,6 @@ public class ConnectionTask implements Runnable {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Cannot create file "+e.getMessage()+" for client");
-            requestCleanup = true;
         } catch (TimeoutException e) {
             System.out.println("File download "+filename+" was stopped (reason: timeout)");
             requestCleanup = true;

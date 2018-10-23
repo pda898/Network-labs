@@ -94,7 +94,7 @@ public class App
     private void parseRecvPacket(DatagramPacket recvPacket) {
         String message = new String(recvPacket.getData());
         switch (message) {
-            case pingMessage:
+            case pingMesороsage:
                 knownPrograms.put(recvPacket.getAddress().getHostAddress(), System.currentTimeMillis());
                 break;
             case exitMessage:

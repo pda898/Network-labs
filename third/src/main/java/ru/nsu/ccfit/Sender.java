@@ -51,7 +51,7 @@ public class Sender extends Thread{
             try {
                 String text;
                 for(NodeInfo client: nodes) {
-                    if (!client.getAddress().equals(message.getFrom()) && (client.getPort()!= message.getPort())) {
+                    if (!client.getAddress().equals(message.getFrom()) || (client.getPort() != message.getPort())) {
                         byte[] buf = new byte[256];
                         long uid = client.getSendID();
                         text = String.valueOf(message.getType())+Long.toString(uid)+":"+message.getMessage();
