@@ -38,7 +38,7 @@ public class Checker extends Thread {
                 break;
             }
             long sleepTime = task.getCheckTime()-System.currentTimeMillis();
-            System.out.println("Will sleep for "+sleepTime);
+            System.err.println("Will sleep for "+sleepTime);
             if (sleepTime > 0) {
                 try {
                     Thread.sleep(sleepTime);
@@ -46,12 +46,11 @@ public class Checker extends Thread {
                     e.printStackTrace();
                 }
             }
-            System.out.println("waked up");
+            System.err.println("waked up");
             if (task.getNumFailed() > maxFailed) {
                 nodes.remove(task.getNode());
                 System.err.println("Node timeouted");
-            }
-            if (task.getUid()>task.getNode().getLastDelivered()) {
+            } else if (task.getUid()>task.getNode().getLastDelivered()) {
                 byte[] buf = new byte[256];
                 buf = task.getMessage().getBytes();
                 try {
