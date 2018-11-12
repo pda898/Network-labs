@@ -1,6 +1,7 @@
 package ru.nsu.ccfit;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -15,9 +16,29 @@ public class UserStorage {
         this.currID = 0L;
     }
 
+    private void removeToken(User user) {
+        String token = null;
+        for (Map.Entry<String, Long> entry : tokenMap.entrySet()) {
+            if (user.getId() == entry.getValue()) {
+                token = entry.getKey();
+                break;
+            }
+        }
+        if (token != null) {
+            tokenMap.remove(token);
+        }
+    }
+
     public LoginInfo create(String username){
         for (User user : userList) {
             if (user.getUsername().equals(username)) {
+                if (user.isOnline() == null) {
+                    removeToken(user);
+                    break;
+                }
+                if (!user.isOnline()) {
+                    removeToken(user);
+                }
                 return null;
             }
         }
@@ -43,7 +64,7 @@ public class UserStorage {
     }
 
     public void delete(User user, String token) {
-        userList.remove(user);
+        user.setOffline();
         tokenMap.remove(token);
     }
 

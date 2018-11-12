@@ -22,8 +22,8 @@ public class User {
         return username;
     }
 
-    public Boolean isAlive() {
-        if (online) return true;
+    public Boolean isOnline() {
+        if (this.online) return true;
         return null;
     }
 
@@ -35,5 +35,9 @@ public class User {
         if (System.currentTimeMillis() - lastseen > TIMEOUT) {
             online = null;
         }
+    }
+
+    public void setOffline() {
+        this.online = false;
     }
 }

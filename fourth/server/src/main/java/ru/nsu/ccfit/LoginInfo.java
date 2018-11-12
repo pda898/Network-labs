@@ -9,7 +9,7 @@ public class LoginInfo {
     public LoginInfo(User user, String token) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.online = user.isAlive();
+        this.online = user.isOnline();
         this.token = token;
     }
 

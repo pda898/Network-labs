@@ -26,7 +26,7 @@ public class UserListHandler implements HttpHandler {
             exchange.setStatusCode(200);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
             exchange.getResponseHeaders().remove(Headers.WWW_AUTHENTICATE);
-            exchange.getResponseSender().send(gson.toJson(users.listUsers()));
+            exchange.getResponseSender().send("{\"users\":"+gson.toJson(users.listUsers())+"}");
         }
     }
 }

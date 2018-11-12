@@ -22,7 +22,7 @@ public class MessageStorage {
     }
 
     public List<Message> getAll(int offset, int count) {
-        int start = Integer.max(Integer.min(offset,currID-1),0);
+        int start = Integer.max(Integer.min(offset,currID),0);
         int end = Integer.max(Integer.min(offset+count,currID),0);
         return messageMap.values().stream().sorted(Comparator.comparing((Message m) -> m.getId())).collect(Collectors.toList()).subList(start,end);
     }

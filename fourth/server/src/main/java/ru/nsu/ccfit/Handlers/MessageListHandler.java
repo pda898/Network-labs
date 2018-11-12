@@ -42,7 +42,7 @@ public class MessageListHandler implements HttpHandler {
             exchange.setStatusCode(200);
             exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
             exchange.getResponseHeaders().remove(Headers.WWW_AUTHENTICATE);
-            exchange.getResponseSender().send("{\"messages\":"+gson.toJson(messages.getAll(0,10))+"}");
+            exchange.getResponseSender().send("{\"messages\":"+gson.toJson(messages.getAll(offset,count))+"}");
         }
     }
 }

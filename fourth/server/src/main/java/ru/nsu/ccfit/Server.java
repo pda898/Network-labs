@@ -10,15 +10,14 @@ import ru.nsu.ccfit.Handlers.*;
  */
 public class Server
 {
-    /*
-            .post("/logout")
-            .get("/users")
-            .get("/users/{id}")
-            .get("/messages")
-            .post("/messages")*/
-
     public static void main( String[] args )
     {
+        String host = "localhost";
+        int port = 8080;
+        if (args.length == 2) {
+            host = args[0];
+            port = Integer.valueOf(args[1]);
+        }
         UserStorage users = new UserStorage();
         MessageStorage messages = new MessageStorage();
         RoutingHandler routes = new RoutingHandler().post("/login",new LoginHandler(users))
@@ -28,7 +27,7 @@ public class Server
                 .post("/messages",new MessageHandler(users,messages))
                 .get("/messages",new MessageListHandler(users,messages))
                 .setFallbackHandler(CommonHandlers::notFoundHandler);
-        Undertow server = Undertow.builder().addHttpListener(8080,"localhost").setHandler(routes).build();
+        Undertow server = Undertow.builder().addHttpListener(port,host).setHandler(routes).build();
         server.start();
     }
 }
