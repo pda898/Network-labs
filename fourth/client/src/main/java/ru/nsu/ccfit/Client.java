@@ -19,15 +19,14 @@ public class Client
     private String host;
     private OkHttpClient client;
     private String token;
-    private ArrayList<User> users;
-    private ArrayList<Message> messages;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
     private Type userListType = new TypeToken<ArrayList<User>>(){}.getType();
     private Type messageListType = new TypeToken<ArrayList<Message>>(){}.getType();
     private Gson g = new Gson();
 
     public Client(String host) {
         this.host = host;
-        this.messages = new ArrayList<>();
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequestsPerHost(15);
         this.client = new OkHttpClient.Builder()
@@ -154,7 +153,9 @@ public class Client
             }
         }
         for (int i = users.size(); i < newUsers.size(); i++) {
-            System.out.println("User "+newUsers.get(i).getUsername()+" connected");
+            if (newUsers.get(i).isAlive()) {
+                System.out.println("User " + newUsers.get(i).getUsername() + " connected");
+            }
         }
         users = newUsers;
     }
@@ -226,8 +227,10 @@ public class Client
     private void printUsers() {
         System.out.println("Current users");
         for (User user : users) {
-            if (user.isAlive()) {
-                System.out.println();
+            if (user.isAlive() != null) {
+                if (user.isAlive()) {
+                    System.out.println(user.getUsername());
+                }
             }
         }
     }

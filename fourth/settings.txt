@@ -1,0 +1,6 @@
+POST /login ru.nsu.ccfit.Handlers.LoginHandler u
+POST /logout ru.nsu.ccfit.Handlers.LogoutHandler u
+GET /users ru.nsu.ccfit.Handlers.UserListHandler u
+GET /users/{id} ru.nsu.ccfit.Handlers.UserInfoHandler u
+POST /messages ru.nsu.ccfit.Handlers.MessageHandler um
+GET /messages ru.nsu.ccfit.Handlers.MessageListHandler um

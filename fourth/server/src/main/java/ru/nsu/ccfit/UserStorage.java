@@ -2,6 +2,7 @@ package ru.nsu.ccfit;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -38,6 +39,7 @@ public class UserStorage {
                 }
                 if (!user.isOnline()) {
                     removeToken(user);
+                    break;
                 }
                 return null;
             }
@@ -85,8 +87,7 @@ public class UserStorage {
         return userList;
     }
 
-    private String generateToken(String string) {
-        string = string+String.valueOf(System.currentTimeMillis());
-        return String.valueOf(string.hashCode());
+    private String generateToken(String name) {
+        return UUID.nameUUIDFromBytes(name.getBytes()).toString();
     }
 }

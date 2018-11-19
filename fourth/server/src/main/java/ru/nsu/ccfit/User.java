@@ -23,8 +23,8 @@ public class User {
     }
 
     public Boolean isOnline() {
-        if (this.online) return true;
-        return null;
+        if (online == null) return null;
+        return online;
     }
 
     public void update() {

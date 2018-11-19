@@ -20,7 +20,7 @@ public class User {
     }
 
     public Boolean isAlive() {
-        if (online) return true;
-        return null;
+        if (online == null) return null;
+        return online;
     }
 }

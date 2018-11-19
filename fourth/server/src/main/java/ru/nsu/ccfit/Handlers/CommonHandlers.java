@@ -22,6 +22,12 @@ public class CommonHandlers {
         exchange.getResponseHeaders().remove(Headers.WWW_AUTHENTICATE);
     }
 
+    public static void wrongMethodHandler(HttpServerExchange exchange) {
+        exchange.setStatusCode(405);
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE,"application/json");
+        exchange.getResponseHeaders().remove(Headers.WWW_AUTHENTICATE);
+    }
+
     public static String getToken(HttpServerExchange exchange) {
         if (!exchange.getResponseHeaders().contains(Headers.AUTHORIZATION)) {
             CommonHandlers.authErrorHandler(exchange);
