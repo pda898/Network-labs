@@ -1,0 +1,6 @@
+/login ru.nsu.ccfit.Handlers.LoginHandler u
+/logout ru.nsu.ccfit.Handlers.LogoutHandler u
+/users ru.nsu.ccfit.Handlers.UserListHandler u
+/users/{id} ru.nsu.ccfit.Handlers.UserInfoHandler u
+/messages ru.nsu.ccfit.Handlers.MessageHandler um
+/ws ru.nsu.ccfit.Handlers.WSMessageHandler ws
